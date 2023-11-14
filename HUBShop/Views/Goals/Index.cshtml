@@ -1,0 +1,263 @@
+﻿@model IEnumerable<HUBShop.Models.Task.Goal>
+@using System.Security.Claims
+
+
+@{
+    ViewData["Title"] = "Index";
+    Pager pager = new Pager();
+    int pageNo = 0;
+    if (ViewBag.Pager != null)
+    {
+        pager = ViewBag.Pager;
+        pageNo = pager.CurrentPage;
+    }
+}
+
+<h1>Задачи</h1>
+<div class="filter-accordion">
+    <div class="fack">
+        <button class="accordion">Поиск</button>
+        <div class="panel">
+            <form asp-action="Index" method="get" class="eboform">
+                <div class="input-wrapper">
+                    <input type="text" name="searchWords" placeholder="Название задачи" class="input">
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="fack">
+        <button class="accordion">Дата</button>
+        <div class="panel">
+            <form asp-action="Index" method="get" class="eboform">
+                <div class="input-wrapper">
+                    <label class="sds" for="startDate">Дата начала:</label>
+                    <input type="datetime-local" id="startDate" name="startDate" class="input Gas">
+                </div>
+                <div class="input-wrapper">
+                    <label class="sds" for="endDate">Дата окончания:</label>
+                    <input type="datetime-local" id="endDate" name="endDate" class="input Gas">
+                </div>
+                <button type="submit" class="btn btn-primary rtr sss">Применить фильтр</button>
+            </form>
+        </div>
+    </div>
+    <div class="fack">
+        <button class="accordion">Приоритет</button>
+        <div class="panel">
+            <form method="get" asp-action="Index" class="eboform asds">
+                <div class="form-group">
+                    <label class="nn">Приоритет</label>
+                    <select name="pr" class="form-control rttr">
+                        <option value="All">Все</option>
+                        <option value="High" class="high-priority">Высокий</option>
+                        <option value="Medium" class="medium-priority">Средний</option>
+                        <option value="Low" class="low-priority">Низкий</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary rttr">Применить фильтр</button>
+            </form>
+        </div>
+    </div>
+    <div class="fack">
+        <button class="accordion">Статус</button>
+        <div class="panel">
+            <form method="get" asp-action="Index" class="eboform asds">
+                <div class="form-group">
+                    <label class="nn">Статус</label>
+                    <select name="st" class="form-control rtr">
+                        <option value="All">Все</option>
+                        <option value="Новая" class="new">Новая</option>
+                        <option value="В процессе" class="in-progress">В процессе</option>
+                        <option value="Завершена" class="closed">Завершенная</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary rtr">Применить фильтр</button>
+            </form>
+        </div>
+    </div>
+</div>
+<partial name="_pager" model="@pager" />
+<div class="tablo">
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="textss">
+                    <a class="as" asp-action="Index" asp-route-sortState="@ViewBag.NameSort">@Html.DisplayNameFor(model => model.Name)</a>
+                </th>
+                <th class="textss">
+                    <a class="as" asp-action="Index" asp-route-sortState="@ViewBag.PriorityValueSort">@Html.DisplayNameFor(model => model.Priority)</a>
+                </th>
+                <th class="textss">
+                    <a class="as" asp-action="Index" asp-route-sortState="@ViewBag.StatusValueSort">@Html.DisplayNameFor(model => model.Status)</a>
+                </th>
+                <th class="textss">
+                    <a class="as" asp-action="Index" asp-route-sortState="@ViewBag.NameSort" asp-route-creatorSort="asc">Создатель</a>
+                </th>
+
+                <th class="textss">
+                    <a class="as" asp-action="Index" asp-route-sortState="@ViewBag.CreatedSort">@Html.DisplayNameFor(model => model.Created)</a>
+                </th>
+                <th class="textss">
+                    Действия
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        <span class="priority-label" data-priority="@item.Priority">@Html.DisplayFor(modelItem => item.Priority)</span>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <th>
+                        @Html.DisplayFor(modelItem => item.Creator.UserName)
+                    </th>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Created)
+                    </td>
+                    <td>
+                        @{
+                            int creatorId;
+                            if (int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out creatorId))
+                            {
+                                if (item.CreatorId == creatorId)
+                                {
+                                    <button class="btns bb"> <a asp-action="Edit" asp-route-id="@item.Id">Изменить</a></button>
+                                    <button class="btnsdel bbdel"><a class="adel" asp-action="Delete" asp-route-id="@item.Id">Удалить</a> </button>
+                                }
+                                @if (item.Status == "Новая")
+                                {
+                                    if (item.CreatorId != creatorId)
+                                    {
+                                        <button class="btnsgr bbgr"> <a class="agr" asp-action="Start" asp-route-id="@item.Id">Начать</a> </button>
+                                    }
+                                }
+                                @if (item.Status == "В процессе")
+                                {
+                                    if (item.CreatorId != creatorId)
+                                    {
+                                        <button class="btnsye bbye"> <a class="aye" asp-action="Complete" asp-route-id="@item.Id">В процессе</a> </button>
+                                    }
+                                }
+                            }
+                            <button class="btnsdet bbdet"> <a class="adet" asp-action="Details" asp-route-id="@item.Id">Детали</a> </button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+
+@* @{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PriorityId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Priority)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PriorityValue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StatusValue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Created)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Started)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ended)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Creator)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Executor)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PriorityId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Priority)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PriorityValue)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StatusValue)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Created)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Started)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ended)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Creator.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Executor.Id)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table> *@
+
+
+
+

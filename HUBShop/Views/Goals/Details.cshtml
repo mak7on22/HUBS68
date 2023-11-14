@@ -1,0 +1,177 @@
+﻿@model HUBShop.Models.Task.Goal
+
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Детали</h1>
+
+<div class="details-container">
+    <div class="details-main">
+        <h4>Задача</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Priority)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Priority)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Status)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Status)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Creator.UserName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Creator.UserName)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Created)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Created)
+            </dd>
+            @if (Model.Status == "Завершена" || Model.Status == "В процессе")
+            {
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Started)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Started)
+                </dd>
+            }
+            @if (Model.Status == "Завершена")
+            {
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Ended)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Ended)
+                </dd>
+            }
+        </dl>
+    </div>
+    <div class="details-description">
+        <h4>Description</h4>
+        <hr />
+        @Html.DisplayFor(model => model.Description)
+        <div class="details-btn">
+            @if (Model.Status == "Новая")
+            {
+                <button class="btnsgr bbgr"> <a class="agr" asp-action="Start" asp-route-id="@Model.Id">Начать </a> </button>
+            }
+            @if (Model.Status == "В процессе")
+            {
+                <button class="btnsye bbye"> <a class="aye" asp-action="Complete" asp-route-id="@Model.Id">В процессе </a></button>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="fg">
+    <button class="btns bb"> <a asp-action="Edit" asp-route-id="@Model?.Id">Изменить</a> </button>
+    <button class="btnsbac bbbac"> <a class="abac" asp-action="Index">Назад</a> </button>
+</div>
+
+
+
+@* @{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Goal</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.PriorityId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.PriorityId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Priority)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Priority)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.PriorityValue)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.PriorityValue)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.StatusValue)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.StatusValue)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Created)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Created)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Started)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Started)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Ended)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Ended)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Creator)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Creator.Id)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Executor)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Executor.Id)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+ *@

@@ -1,0 +1,29 @@
+# Папки и файлы, создаваемые Visual Studio
+.vscode/
+.vs/
+bin/
+obj/
+
+# Зависимости и временные файлы
+*.user
+*.suo
+*.bak
+*.log
+*.cache
+*.dll
+*.sqlite
+*.sdf
+*.db
+*.db-shm
+*.db-wal
+*.db3
+*.pdb
+*.opendb
+[Tt]est[Rr]esult*
+[Bb]in
+[Dd]ebug/
+[Rr]elease/
+_node_modules/
+bower_components/
+# Зависимости npm
+node_modules/
